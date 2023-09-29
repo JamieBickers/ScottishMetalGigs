@@ -1,8 +1,8 @@
 import azure.functions as func
 import logging
-import os
+import json
 
-from stuff import printOutText
+from gigs import get_gigs
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -10,19 +10,7 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 def getGigs(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully." + printOutText())
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response." + printOutText() + os.environ["gigs_api_client_id"],
-             status_code=200
-        )
+    return func.HttpResponse(
+        json.dumps(get_gigs()),
+        mimetype="application/json",
+    )
