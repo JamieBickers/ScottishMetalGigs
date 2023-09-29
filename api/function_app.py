@@ -1,5 +1,8 @@
 import azure.functions as func
 import logging
+import os
+
+from stuff import printOutText
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -17,9 +20,9 @@ def getGigs(req: func.HttpRequest) -> func.HttpResponse:
             name = req_body.get('name')
 
     if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully." + printOutText())
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response." + printOutText() + os.environ["gigs_api_client_id"],
              status_code=200
         )
