@@ -10,21 +10,21 @@ import praw
 import re
 import os
 
-# @dataclass
-# class Post:
-#     title: str
-#     url: str
-#     timestamp: datetime
-#     is_self: bool
+@dataclass
+class Post:
+    title: str
+    url: str
+    timestamp: datetime
+    is_self: bool
 
-# @dataclass
-# class Gig:
-#     bands: list[str]
-#     venue: str
-#     city: str
-#     timestamps: list[datetime]
-#     url: str
-#     genres: dict[str, int]
+@dataclass
+class Gig:
+    bands: list[str]
+    venue: str
+    city: str
+    timestamps: list[datetime]
+    url: str
+    genres: dict[str, int]
 
 # client_id = os.environ["gigs_api_client_id"]
 # client_secret = os.environ["gigs_api_client_secret"]
