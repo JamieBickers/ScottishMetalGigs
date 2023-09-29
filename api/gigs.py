@@ -10,14 +10,14 @@ import praw
 import re
 import os
 
-@dataclass
+#@dataclass
 class Post:
     title: str
     url: str
     timestamp: datetime
     is_self: bool
 
-@dataclass
+#@dataclass
 class Gig:
     bands: "list[str]"
     venue: str
