@@ -17,7 +17,7 @@ def getGigs(req: func.HttpRequest) -> func.HttpResponse:
         )
     except Exception as e:
         return func.HttpResponse(
-            json.dumps(repr(e)),
+            "test",
             mimetype="application/json",
         )
 
