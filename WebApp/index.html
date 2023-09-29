@@ -1,27 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="styles.css">
-      <title>Vanilla JavaScript App</title>
-  </head>
-  <body>
-      <main>
-      <h1>Vanilla JavaScript App</h1>
-      <p>Loading content from the API: <b id="name">...</b></p>
-      </main>
-
-      <!-- <script>
-      (async function() {
-          const { text } = await( await fetch(`/api/getGigs`)).json();
-          document.querySelector('#name').textContent = text;
-      }());
-      </script> -->
-  </body>
-  <script type="module">
-      const response = await fetch(`/api/getGigs`);
-      const movies = await response.text();
-      console.log(movies);
-  </script>
+<html>
+    <head>
+        <title>Scottish Metal Gigs</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    </head>
+    <body>
+        <div class="container">
+            <table class="table stripe" id="main-table">
+                <thead>
+                    <tr>
+                        <th>Bands</th>
+                        <th>City</th>
+                        <th>Date</th>
+                        <th>Genres</th>
+                        <th>Venue</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody id="main-table-body">
+                </tbody>
+            </table>
+        </div>
+    </body>
 </html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<script type="module">
+    function formatBands(bands) {
+        return bands.join(", ");
+    }
+
+    function formatDate(dates) {
+        return dates.map(date => moment(date).format("DD/MM/YYYY"))
+                    .join(", ");
+    }
+
+    function formatGenres(genres) {
+        const genresToignore = ["seen live", "seen live twice"];
+        const genresArray = Object.keys(genres).map(key => ({genre: key, count: genres[key]}));
+        genresArray.sort((genre1, genre2) => genre2.count - genre1.count);
+        return genresArray.map(genre => genre.genre)
+                          .filter(genre => !genresToignore.includes(genre))
+                          .join(", ");
+    }
+
+    function formatLink(url) {
+        return `<a href="${url}">Link</a>`;
+    }
+
+    const response = await fetch(`/api/getGigs`);
+    const gigs = await response.json();
+    console.log(gigs);
+
+    const url = window.location;
+    const params = new URLSearchParams(url.search);
+    let city = params.get("city");
+    if (city === null) {
+        city = "";
+    }
+
+    gigs.forEach(gig => {
+        let mainTable = document.getElementById("main-table-body");
+        let newRow = mainTable.insertRow(mainTable.rows.length);
+
+        let band = newRow.insertCell(0);
+        let city = newRow.insertCell(1);
+        let date = newRow.insertCell(2);
+        let genre = newRow.insertCell(3);
+        let venue = newRow.insertCell(4);
+        let link = newRow.insertCell(5);
+
+        band.innerHTML = formatBands(gig.bands);
+        city.innerHTML = gig.city;
+        date.innerHTML = formatDate(gig.timestamps);
+        genre.innerHTML = formatGenres(gig.genres);
+        venue.innerHTML = gig.venue;
+        link.innerHTML = formatLink(gig.url);
+    });
+
+    let table = new DataTable('#main-table', {
+        paging: false,
+        columnDefs: [
+            { "searchable": false, "targets": 0 },
+            { "searchable": true, "targets": 1 },
+            { "searchable": false, "targets": 2 },
+            { "searchable": false, "targets": 3 },
+            { "searchable": false, "targets": 4 },
+            { "searchable": false, "targets": 5 }
+        ],
+        language: {
+            "search": "City:"
+        },
+        order: [[2, "asc"]],
+        ordering: true,
+        columnDefs : [{
+            targets: 2,
+            render: function (data, type, row, meta) {
+                if ( type === 'sort' || type === 'type' ) {
+                    return moment(data.split(", ")[0], "DD/MM/YYYY").unix();
+                }
+
+                return data;
+            }}],
+        search: {
+            search: city
+        }
+    });
+</script>
