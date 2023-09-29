@@ -24,4 +24,4 @@ def getGigs(req: func.HttpRequest) -> func.HttpResponse:
     # return func.HttpResponse(
     #     json.dumps("test"),
     #     mimetype="application/json",
-    )
+    # )
