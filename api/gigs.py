@@ -121,5 +121,5 @@ def get_gigs():
     for gig in gigs:
         gig.genres = get_weighted_genres(gig.bands)
 
-    json_data = json.dumps([asdict(gig) for gig in gigs], indent=4, default=json_serial)
+    json_data = json.dumps([asdict(gig) for gig in gigs], default=json_serial)
     return json_data
