@@ -113,13 +113,13 @@ def json_serial(obj):
     raise TypeError ("Type %s not serializable" % type(obj))
 
 def get_gigs():
-    posts = get_posts(subreddit_name)
-    posts = [post for post in posts if is_post_recent(post) and not post.is_self]
-    gigs, unparsed_posts = parse_posts(posts)
-    gigs = [gig for gig in gigs if gig is not None and not is_gig_in_past(gig)]
+    # posts = get_posts(subreddit_name)
+    # posts = [post for post in posts if is_post_recent(post) and not post.is_self]
+    # gigs, unparsed_posts = parse_posts(posts)
+    # gigs = [gig for gig in gigs if gig is not None and not is_gig_in_past(gig)]
 
-    for gig in gigs:
-        gig.genres = get_weighted_genres(gig.bands)
+    # for gig in gigs:
+    #     gig.genres = get_weighted_genres(gig.bands)
 
-    json_data = json.dumps([asdict(gig) for gig in gigs], default=json_serial)
-    return json_data
+    # json_data = json.dumps([asdict(gig) for gig in gigs], default=json_serial)
+    return "dhdghdfr"

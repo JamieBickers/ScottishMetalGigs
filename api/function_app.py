@@ -2,9 +2,7 @@ import azure.functions as func
 import logging
 import json
 
-#from gigs import get_gigs
-def get_gigs():
-    return "dfrghdf"
+from gigs import get_gigs
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
