@@ -117,8 +117,8 @@ def get_gigs():
     gigs, unparsed_posts = parse_posts(posts)
     gigs = [gig for gig in gigs if gig is not None and not is_gig_in_past(gig)]
 
-    # for gig in gigs:
-    #     gig.genres = get_weighted_genres(gig.bands)
+    for gig in gigs:
+        gig.genres = get_weighted_genres(gig.bands)
 
     # return json.dumps([gig.__dict__ for gig in gigs], default=json_serial)
     return "blah"
