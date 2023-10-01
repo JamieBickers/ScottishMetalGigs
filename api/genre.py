@@ -25,7 +25,7 @@ def get_artist_genre(artist):
         logging.error(req)
         resp = s.send(prepared)
         logging.error(prepared)
-        logging.error("Response code: " + resp.status_code)
+        logging.error("Response code: " + str(resp.status_code))
         logging.error("Response: " + str(resp))
     except Exception as e:
         logging.error("Exception: " + str(e))
