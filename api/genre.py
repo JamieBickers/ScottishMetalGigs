@@ -4,6 +4,7 @@ import logging
 import time
 
 api_key = os.environ["genres_api_key"]
+counter = 0
 
 def get_artist_genre(artist):
     base_url = "http://ws.audioscrobbler.com/2.0/"
@@ -18,8 +19,8 @@ def get_artist_genre(artist):
     logging.error("Start request")
     response = requests.get(base_url, params=params)
     data = response.json()
-    logging.error("End request " + str(data))
-    time.sleep(1)
+    logging.error(str(counter) + "End request " + str(data))
+    counter += 1
     
     genres = []
     if response.status_code == 200 and "artist" in data and "tags" in data["artist"]:
