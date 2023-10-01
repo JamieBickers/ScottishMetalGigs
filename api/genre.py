@@ -13,7 +13,7 @@ def get_artist_genre(artist):
         "format": "json"
     }
 
-    # response = requests.get(base_url, params=params)
+    response = requests.get(base_url, params=params)
     # data = response.json()
     
     genres = []
