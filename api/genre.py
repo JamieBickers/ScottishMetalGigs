@@ -1,5 +1,6 @@
 import requests
 import os
+import logging 
 
 api_key = os.environ["genres_api_key"]
 
@@ -13,6 +14,7 @@ def get_artist_genre(artist):
         "format": "json"
     }
 
+    logging.error("HERE1") 
     response = requests.get(base_url, params=params)
     # data = response.json()
     
