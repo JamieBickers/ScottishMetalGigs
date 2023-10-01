@@ -1,7 +1,7 @@
 import azure.functions as func
 import logging
 
-#from gigs import get_gigs
+from gigs import get_gigs
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -11,7 +11,7 @@ def getGigs(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         return func.HttpResponse(
-            "get_gigs()",
+            get_gigs(),
             mimetype="application/json",
         )
     except Exception as e:
