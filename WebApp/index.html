@@ -55,6 +55,7 @@
     const response = await fetch(`/api/getGigs`);
     const gigs = await response.json();
     console.log(gigs);
+    console.log(typeof(gigs));
 
     const url = window.location;
     const params = new URLSearchParams(url.search);
