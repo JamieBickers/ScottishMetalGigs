@@ -23,8 +23,10 @@ def get_artist_genre(artist):
         prepared = req.prepare()
         s = requests.Session()
         logging.error(req)
-        s.send(prepared)
+        resp = s.send(prepared)
         logging.error(prepared)
+        logging.error("Response code: " + resp.status_code)
+        logging.error("Response: " + str(resp))
     except Exception as e:
         logging.error("Exception: " + str(e))
     # data = response.json()
