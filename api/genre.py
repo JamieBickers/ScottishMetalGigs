@@ -13,27 +13,26 @@ def get_artist_genre(artist):
         "format": "json"
     }
 
-    response = requests.get(base_url, params=params)
-    data = response.json()
+    # response = requests.get(base_url, params=params)
+    # data = response.json()
     
     genres = []
-    if response.status_code == 200 and "artist" in data and "tags" in data["artist"]:
-        genres = [tag["name"] for tag in data["artist"]["tags"]["tag"]]
-    else:
-        return []
-        #print("Could not retrieve artist information: " + artist)
+    # if response.status_code == 200 and "artist" in data and "tags" in data["artist"]:
+    #     genres = [tag["name"] for tag in data["artist"]["tags"]["tag"]]
+    # else:
+    #     return []
     
     return genres
 
 def get_weighted_genres(artists):
-    # weighted_genres = {}
-    # for artist in artists:
-    #     genres = get_artist_genre(artist)
-    #     for genre in genres:
-    #         if genre in weighted_genres:
-    #             weighted_genres[genre] = weighted_genres[genre] + 1
-    #         else:
-    #             weighted_genres[genre] = 1
+    weighted_genres = {}
+    for artist in artists:
+        genres = get_artist_genre(artist)
+        for genre in genres:
+            if genre in weighted_genres:
+                weighted_genres[genre] = weighted_genres[genre] + 1
+            else:
+                weighted_genres[genre] = 1
     
     # return weighted_genres
     return {"Thrash Metal": 1}
