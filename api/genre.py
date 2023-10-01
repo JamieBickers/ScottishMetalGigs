@@ -20,7 +20,9 @@ def get_artist_genre(artist):
         #response = requests.get(base_url, params=params)
         #requests.get("http://www.google.com")
         req = requests.Request('GET', 'https://httpbin.org/get')
+        prepared = req.prepare()
         logging.error(req)
+        logging.error(prepared)
     except Exception as e:
         logging.error("Exception: " + str(e))
     # data = response.json()
