@@ -14,11 +14,16 @@ def get_artist_genre(artist):
         "format": "json"
     }
 
-    session = requests.Session()
-    request = requests.Request("GET", base_url, params=params)
-    prepared = request.prepare()
-    response = session.send(prepared)
+    logging.error("Start request")
+    response = requests.get(base_url, params=params)
     data = response.json()
+    logging.error("End request " + str(data))
+
+    # session = requests.Session()
+    # request = requests.Request("GET", base_url, params=params)
+    # prepared = request.prepare()
+    # response = session.send(prepared)
+    # data = response.json()
 
     # try:
     #     logging.error("Trying request to: " + base_url)
