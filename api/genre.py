@@ -1,6 +1,7 @@
 import requests
 import os
-import logging 
+import logging
+import time
 
 api_key = os.environ["genres_api_key"]
 
@@ -18,28 +19,7 @@ def get_artist_genre(artist):
     response = requests.get(base_url, params=params)
     data = response.json()
     logging.error("End request " + str(data))
-
-    # session = requests.Session()
-    # request = requests.Request("GET", base_url, params=params)
-    # prepared = request.prepare()
-    # response = session.send(prepared)
-    # data = response.json()
-
-    # try:
-    #     logging.error("Trying request to: " + base_url)
-    #     #logging.error("Params: " + str(params))
-    #     #response = requests.get(base_url, params=params)
-    #     #requests.get("http://www.google.com")
-    #     req = requests.Request('GET', 'https://httpbin.org/get')
-    #     prepared = req.prepare()
-    #     s = requests.Session()
-    #     logging.error(req)
-    #     resp = s.send(prepared)
-    #     logging.error(prepared)
-    #     logging.error("Response code: " + str(resp.status_code))
-    #     logging.error("Response: " + str(resp))
-    # except Exception as e:
-    #     logging.error("Exception: " + str(e))
+    time.sleep(1)
     
     genres = []
     if response.status_code == 200 and "artist" in data and "tags" in data["artist"]:
