@@ -16,9 +16,10 @@ def get_artist_genre(artist):
 
     try:
         logging.error("Trying request to: " + base_url)
-        logging.error("Params: " + str(params))
+        raise Exception("My error")
+        #logging.error("Params: " + str(params))
         #response = requests.get(base_url, params=params)
-        requests.get("http://www.google.com")
+        #requests.get("http://www.google.com")
     except Exception as e:
         logging.error("Exception: " + str(e))
     # data = response.json()
