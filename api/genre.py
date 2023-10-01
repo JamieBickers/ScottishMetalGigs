@@ -26,13 +26,14 @@ def get_artist_genre(artist):
     return genres
 
 def get_weighted_genres(artists):
-    weighted_genres = {}
-    for artist in artists:
-        genres = get_artist_genre(artist)
-        for genre in genres:
-            if genre in weighted_genres:
-                weighted_genres[genre] = weighted_genres[genre] + 1
-            else:
-                weighted_genres[genre] = 1
+    # weighted_genres = {}
+    # for artist in artists:
+    #     genres = get_artist_genre(artist)
+    #     for genre in genres:
+    #         if genre in weighted_genres:
+    #             weighted_genres[genre] = weighted_genres[genre] + 1
+    #         else:
+    #             weighted_genres[genre] = 1
     
-    return weighted_genres
+    # return weighted_genres
+    return {"Thrash Metal": 1}
