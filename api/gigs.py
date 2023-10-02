@@ -144,12 +144,11 @@ def get_new_gigs():
     existing_gigs = repository.get_gigs()
 
     new_gigs = [gig for gig in gigs if not does_list_of_gigs_contain_gig(existing_gigs, gig)]
-    print(new_gigs)
 
     for gig in new_gigs:
         gig.genres = get_weighted_genres(gig.bands)
 
-    repository.save_gigs(gigs)
+    repository.save_gigs(new_gigs)
     return json.dumps([gig.as_serialisable() for gig in new_gigs])
 
 def get_existing_gigs():
