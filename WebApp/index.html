@@ -35,7 +35,7 @@
     }
 
     function formatDate(dates) {
-        return dates.map(date => moment(date).format("DD/MM/YYYY"))
+        return dates.map(date => moment(date).format("dddd DD/MM/YYYY"))
                     .join(", ");
     }
 
