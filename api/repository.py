@@ -21,6 +21,5 @@ class Repository:
 
         return list(results)
 
-    def save_gigs(self, gigs):
-        for gig in gigs:
-            self.container.create_item(gig.as_serialisable(), enable_automatic_id_generation=True)
+    def save_gig(self, gig):
+        self.container.create_item(gig.as_serialisable(), enable_automatic_id_generation=True)
