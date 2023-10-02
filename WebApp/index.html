@@ -52,19 +52,7 @@
         return `<a href="${url}">Link</a>`;
     }
 
-    const response = await fetch(`/api/getExistingGigs`);
-    const gigs = await response.json();
-    console.log(gigs);
-    console.log(typeof(gigs));
-
-    const url = window.location;
-    const params = new URLSearchParams(url.search);
-    let city = params.get("city");
-    if (city === null) {
-        city = "";
-    }
-
-    gigs.forEach(gig => {
+    function addGigToTable(gig) {
         let mainTable = document.getElementById("main-table-body");
         let newRow = mainTable.insertRow(mainTable.rows.length);
 
@@ -81,7 +69,21 @@
         genre.innerHTML = formatGenres(gig.genres);
         venue.innerHTML = gig.venue;
         link.innerHTML = formatLink(gig.url);
-    });
+    }
+
+    const existingGigsResponse = await fetch(`/api/getExistingGigs`);
+    const existingGigs = await existingGigsResponse.json();
+    console.log(existingGigs);
+    console.log(typeof(existingGigs));
+
+    const url = window.location;
+    const params = new URLSearchParams(url.search);
+    let city = params.get("city");
+    if (city === null) {
+        city = "";
+    }
+
+    existingGigs.forEach(addGigToTable);
 
     let table = new DataTable('#main-table', {
         paging: false,
@@ -110,5 +112,20 @@
         search: {
             search: city
         }
+    });
+
+    const newGigsResponse = await fetch(`/api/getNewGigs`);
+    const newGigs = await newGigsResponse.json();
+    console.log(newGigs);
+    console.log(typeof(newGigs));
+
+    newGigs.foreach(gig => {
+        table.row.add({
+            0: formatBands(gig.bands),
+            1: gig.city,
+            2: formatDate(gig.timestamps),
+            3: formatGenres(gig.genres),
+            4: gig.venue,
+            5: formatLink(gig.url)}).draw();
     });
 </script>
