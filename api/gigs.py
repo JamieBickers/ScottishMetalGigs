@@ -1,4 +1,5 @@
-from genre import get_weighted_genres
+from genre import get_weighted_genres, get_weighted_genres_dummy
+from repository import Repository
 
 from datetime import datetime
 from dateutil import parser
@@ -25,22 +26,29 @@ class Gig:
         self.url = url
         self.genres = genres
 
-client_id = os.environ["gigs_api_client_id"]
-client_secret = os.environ["gigs_api_client_secret"]
-user_agent = "ScottishMetalGigs"
-subreddit_name = "MetalGigsScotland"
+    def as_serialisable(self):
+        as_dict = self.__dict__
+        as_dict["timestamps"] = [str(timestamp) for timestamp in as_dict["timestamps"]]
+        return as_dict
 
-reddit = praw.Reddit(
-    client_id=client_id,
-    client_secret=client_secret,
-    user_agent=user_agent
-)
+class PostsApi:
+    client_id = os.environ["gigs_api_client_id"]
+    client_secret = os.environ["gigs_api_client_secret"]
+    user_agent = "ScottishMetalGigs"
+    subreddit_name = "MetalGigsScotland"
 
-def get_posts(subreddit_name):
-    subreddit = reddit.subreddit(subreddit_name)
-    posts = subreddit.new(limit=1000)
+    def __init__(self):
+        self.reddit = praw.Reddit(
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            user_agent=self.user_agent
+        )
 
-    return [Post(post.title, post.url, datetime.fromtimestamp(post.created_utc), post.is_self) for post in posts]
+    def get_posts(self):
+        subreddit = self.reddit.subreddit(self.subreddit_name)
+        posts = subreddit.new(limit=1000)
+
+        return [Post(post.title, post.url, datetime.fromtimestamp(post.created_utc), post.is_self) for post in posts]
 
 def parse_dates_from_post_title(date):
     dates = []
@@ -105,19 +113,46 @@ def is_gig_in_past(gig):
             all_dates_in_past = False
     return all_dates_in_past
 
-def json_serial(obj):
-    """JSON serializer for objects not serializable by default json code"""
-    if isinstance(obj, datetime):
-        return obj.isoformat()
-    raise TypeError ("Type %s not serializable" % type(obj))
+def are_gigs_equal(gig, gig_from_db):
+    bands_equal = gig.bands == gig_from_db["bands"]
+    venue_equal = gig.venue == gig_from_db["venue"]
+    city_equal = gig.city == gig_from_db["city"]
+    timestamps_equal = gig.timestamps == [parser.parse(timestamp) for timestamp in gig_from_db["timestamps"]]
+    url_equal = gig.url == gig_from_db["url"]
 
-def get_gigs():
-    posts = get_posts(subreddit_name)
+    return bands_equal and venue_equal and city_equal and timestamps_equal and url_equal
+
+def does_list_of_gigs_contain_gig(gigs, gig_to_find):
+    list_contains_gig = False
+    for gig in gigs:
+        if are_gigs_equal(gig_to_find, gig):
+            list_contains_gig = True
+    return list_contains_gig
+
+def gig_from_db_to_gig(gig_from_db):
+    timestamps = [parser.parse(timestamp) for timestamp in gig_from_db["timestamps"]]
+    return Gig(gig_from_db["bands"], gig_from_db["venue"], gig_from_db["city"], timestamps, gig_from_db["url"], gig_from_db["genres"])
+
+def get_new_gigs():
+    posts_api = PostsApi()
+    posts = posts_api.get_posts()
     posts = [post for post in posts if is_post_recent(post) and not post.is_self]
     gigs, unparsed_posts = parse_posts(posts)
     gigs = [gig for gig in gigs if gig is not None and not is_gig_in_past(gig)]
 
-    for gig in gigs:
+    repository = Repository()
+    existing_gigs = repository.get_gigs()
+
+    new_gigs = [gig for gig in gigs if not does_list_of_gigs_contain_gig(existing_gigs, gig)]
+    print(new_gigs)
+
+    for gig in new_gigs:
         gig.genres = get_weighted_genres(gig.bands)
 
-    return json.dumps([gig.__dict__ for gig in gigs], default=json_serial)
+    repository.save_gigs(gigs)
+    return json.dumps([gig.as_serialisable() for gig in new_gigs])
+
+def get_existing_gigs():
+    repository = Repository()
+    existing_gigs = repository.get_gigs()
+    return json.dumps([gig_from_db_to_gig(gig).as_serialisable() for gig in existing_gigs])

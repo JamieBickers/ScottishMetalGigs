@@ -52,7 +52,7 @@
         return `<a href="${url}">Link</a>`;
     }
 
-    const response = await fetch(`/api/getGigs`);
+    const response = await fetch(`/api/getExistingGigs`);
     const gigs = await response.json();
     console.log(gigs);
     console.log(typeof(gigs));

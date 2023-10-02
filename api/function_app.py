@@ -1,21 +1,20 @@
 import azure.functions as func
 import logging
 
-from gigs import get_gigs
+from gigs import get_new_gigs, get_existing_gigs
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="getGigs")
-def getGigs(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
+@app.route(route="getNewGigs")
+def getNewGigs(req: func.HttpRequest) -> func.HttpResponse:
+    return func.HttpResponse(
+        get_new_gigs(),
+        mimetype="application/json",
+    )
 
-    try:
-        return func.HttpResponse(
-            get_gigs(),
-            mimetype="application/json",
-        )
-    except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            mimetype="application/json",
-        )
+@app.route(route="getExistingGigs")
+def getExistingGigs(req: func.HttpRequest) -> func.HttpResponse:
+    return func.HttpResponse(
+        get_existing_gigs(),
+        mimetype="application/json",
+    )
