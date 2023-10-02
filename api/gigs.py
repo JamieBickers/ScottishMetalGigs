@@ -149,7 +149,7 @@ def get_new_gigs():
         gig.genres = get_weighted_genres(gig.bands)
         repository.save_gig(gig)
 
-    return json.dumps([gig.as_serialisable() for gig in new_gigs])
+    return json.dumps({"gigs": [gig.as_serialisable() for gig in new_gigs], "unparsedPosts": unparsed_posts})
 
 def get_existing_gigs():
     repository = Repository()

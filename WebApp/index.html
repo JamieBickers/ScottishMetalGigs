@@ -113,7 +113,9 @@
     });
 
     const newGigsResponse = await fetch(`/api/getNewGigs`);
-    const newGigs = await newGigsResponse.json();
+    const newGigsResponseJson = await newGigsResponse.json();
+    const newGigs = newGigsResponseJson["gigs"];
+    const unparsedPosts = newGigsResponseJson["unparsedPosts"];
 
     newGigs.forEach(gig => {
         table.row.add({
@@ -124,4 +126,8 @@
             4: gig.venue,
             5: formatLink(gig.url)}).draw();
     });
+
+    unparsedPosts.forEach(post => {
+        console.log("Unparsed post: " + post);
+    })
 </script>
