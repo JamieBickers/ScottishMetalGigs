@@ -154,5 +154,6 @@ def get_new_gigs():
 def get_existing_gigs():
     repository = Repository()
     existing_gigs = repository.get_gigs()
-    gigs = [gig_from_db_to_gig(gig) for gig in existing_gigs if not is_gig_in_past(gig)]
+    gigs = [gig_from_db_to_gig(gig) for gig in existing_gigs]
+    gigs = [gig for gig in gigs if not is_gig_in_past(gig)]
     return json.dumps([gig.as_serialisable() for gig in gigs])
