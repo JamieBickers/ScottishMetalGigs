@@ -27,15 +27,17 @@ def get_artist_genre(artist):
 
 def get_weighted_genres(artists):
     weighted_genres = {}
-    for artist in artists:
-        genres = get_artist_genre(artist)
+    number_of_artists = len(artists)
+    for i in range(0, number_of_artists):
+        genres = get_artist_genre(artists[i])
+        weighting = number_of_artists - i
         for genre in genres:
             if genre in weighted_genres:
-                weighted_genres[genre] = weighted_genres[genre] + 1
+                weighted_genres[genre] = weighted_genres[genre] + weighting
             else:
-                weighted_genres[genre] = 1
+                weighted_genres[genre] = weighting
     
     return weighted_genres
 
 def get_weighted_genres_dummy(artists):
-    return {"Thrash Metal": 3}
+    return {"Thrash Metal": 3, "Death Metal": 2}
